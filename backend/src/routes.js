@@ -38,6 +38,8 @@ routes.get('/deliverymen', verifyAdm, DeliverymenController.index);
 /* rota para cadastro de entregadores */
 routes.post('/deliverymen', verifyAdm, DeliverymenController.store);
 /* rota para atualização de entregadores */
+routes.put('/deliverymen', verifyAdm, DeliverymenController.update);
 /* rota para removação de entregadores */
+routes.delete('/deliverymen/:id', verifyAdm, DeliverymenController.delete);
 
 export default routes;
