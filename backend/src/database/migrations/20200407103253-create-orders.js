@@ -21,8 +21,13 @@ module.exports = {
         onDelete: 'CASCADE',
         allowNull: false,
       },
-      signature_id (referência à uma assinatura do destinatário, que será uma imagem);
-
+      signature_id: {
+        type: Sequelize.INTEGER,
+        references: { model: 'signatures', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
+        allowNull: true,
+      },
       product: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -50,13 +55,7 @@ module.exports = {
     });
   },
 
-  down: (queryInterface, Sequelize) => {
-    /*
-      Add reverting commands here.
-      Return a promise to correctly handle asynchronicity.
-
-      Example:
-      return queryInterface.dropTable('users');
-    */
+  down: queryInterface => {
+    return queryInterface.dropTable('signatures');
   },
 };

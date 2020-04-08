@@ -61,9 +61,9 @@ class DeliverymenController {
       return res.status(400).json({ error: 'validation fails' });
     }
 
-    const { email } = req.body;
+    const { id } = req.body;
 
-    const deliveryman = await Deliverymen.findByPk(req.id);
+    const deliveryman = await Deliverymen.findByPk(id);
 
     if (!deliveryman) {
       return res.status(400).json({ error: 'Deliveryman does not exists.' });
@@ -73,7 +73,7 @@ class DeliverymenController {
      * Se o e-mail for diferente do que está base para o entregador e já existir
      * esse e-mail na base, apresenta erro
      */
-    if (email && email !== deliveryman.email) {
+    if (req.body.email && req.body.email !== deliveryman.email) {
       const deliverymanExists = await Deliverymen.findOne({ where: { email } });
 
       if (deliverymanExists) {
@@ -81,9 +81,12 @@ class DeliverymenController {
       }
     }
 
-    await deliveryman.update(req.body);
+    await deliveryman.update({
+      name: req.body.name,
+      email: req.body.email,
+    });
 
-    const { id, name, avatar } = await Deliverymen.findByPk(req.id, {
+    const { name, avatar_id, email } = await Deliverymen.findByPk(id, {
       include: [
         {
           model: File,
@@ -97,7 +100,7 @@ class DeliverymenController {
       id,
       name,
       email,
-      avatar,
+      avatar_id,
     });
   }
 }

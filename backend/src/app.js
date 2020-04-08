@@ -1,4 +1,10 @@
 /*
+  Fazendo o import abaixo, as variveis de ambiente do arquivo .env
+  vão automaticamente para uma variavel global do node, chamada
+  process.env e a partir dai conseguimos acessar as variaveis do nosso .env
+*/
+import 'dotenv/config';
+/*
 const express = require('express');
 const routes = require('./routes');
 */
