@@ -8,7 +8,7 @@ import RecipientsController from './app/controllers/RecipientsController';
 import UsersController from './app/controllers/UsersController';
 import DeliverymenController from './app/controllers/DeliverymenController';
 import OrdersController from './app/controllers/OrdersController';
-
+import DeliveriesController from './app/controllers/DeliveriesController';
 import authMiddleware from './app/middlewares/auth';
 
 const routes = new Router();
@@ -55,6 +55,7 @@ routes.put('/orders/:id', verifyAdm, OrdersController.update);
 routes.delete('/orders/:id', verifyAdm, OrdersController.delete);
 
 /* Funcionalidades dos entregadores */
-routes.get('/deliveries', verifyAdm, OrdersController.index);
+/* Visualizar encomendas */
+routes.get('/deliveries/:id/:status', DeliveriesController.index);
 
 export default routes;
