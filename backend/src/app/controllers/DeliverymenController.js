@@ -5,7 +5,6 @@ import File from '../models/Files';
 
 class DeliverymenController {
   async index(req, res) {
-    console.log(Deliverymen);
     const deliverymenExists = await Deliverymen.findAll();
 
     if (!deliverymenExists) {
@@ -61,19 +60,18 @@ class DeliverymenController {
       return res.status(400).json({ error: 'validation fails' });
     }
 
-    const { id } = req.body;
+    const { id, email } = req.body;
 
     const deliveryman = await Deliverymen.findByPk(id);
 
     if (!deliveryman) {
       return res.status(400).json({ error: 'Deliveryman does not exists.' });
     }
-
     /**
      * Se o e-mail for diferente do que está base para o entregador e já existir
      * esse e-mail na base, apresenta erro
      */
-    if (req.body.email && req.body.email !== deliveryman.email) {
+    if (email && email !== deliveryman.email) {
       const deliverymanExists = await Deliverymen.findOne({ where: { email } });
 
       if (deliverymanExists) {
@@ -81,12 +79,9 @@ class DeliverymenController {
       }
     }
 
-    await deliveryman.update({
-      name: req.body.name,
-      email: req.body.email,
-    });
+    await deliveryman.update(req.body);
 
-    const { name, avatar_id, email } = await Deliverymen.findByPk(id, {
+    const { name, avatar, email: email_atu } = await Deliverymen.findByPk(id, {
       include: [
         {
           model: File,
@@ -99,8 +94,8 @@ class DeliverymenController {
     return res.json({
       id,
       name,
-      email,
-      avatar_id,
+      email_atu,
+      avatar,
     });
   }
 }

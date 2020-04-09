@@ -58,8 +58,27 @@ class OrderController {
           as: 'deliveryman',
           attributes: ['name', 'email'],
         },
+        {
+          model: Recipient,
+          as: 'recipient',
+          attributes: [
+            'name',
+            'street',
+            'complement',
+            'neighborhood',
+            'state',
+            'city',
+            'zip_code',
+          ],
+        },
       ],
     });
+
+    // Chama a execução da fila para envio de e-mail
+    await Queue.add(OrderMail.key, {
+      orderExist,
+    });
+
     return res.json(orderExist);
   }
 

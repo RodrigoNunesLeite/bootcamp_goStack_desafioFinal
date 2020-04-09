@@ -36,7 +36,6 @@ routes.post('/recipients', RecipientsController.store);
 
 /* rota para atualizacao do destinatario */
 routes.put('/recipients', RecipientsController.update);
-
 /* rota para listagem de entregadores */
 routes.get('/deliverymen', verifyAdm, DeliverymenController.index);
 /* rota para cadastro de entregadores */
