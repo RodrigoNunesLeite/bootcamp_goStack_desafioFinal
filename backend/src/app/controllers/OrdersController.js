@@ -3,6 +3,7 @@ import * as Yup from 'yup';
 import Order from '../models/Orders';
 import Recipient from '../models/Recipients';
 import Deliveryman from '../models/Deliverymen';
+import Signature from '../models/Signatures';
 
 import OrderMail from '../jobs/OrderMails';
 import Queue from '../../lib/Queue';
@@ -82,7 +83,66 @@ class OrderController {
     return res.json(orderExist);
   }
 
-  async update(req, res) {}
+  async update(req, res) {
+    // Verifica se encomenda existe
+    const OrderExists = await Order.findByPk(req.params.id);
+
+    if (!OrderExists) {
+      return res.status(400).json({ error: 'Order does not exist.' });
+    }
+
+    const schema = Yup.object().shape({
+      recipient_id: Yup.number(),
+      deliveryman_id: Yup.number(),
+      signature_id: Yup.number(),
+      product: Yup.string(),
+      canceled_at: Yup.date(),
+      start_date: Yup.date(),
+      end_date: Yup.date(),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'validation fails' });
+    }
+
+    const recipientExists = await Recipient.findByPk(req.body.recipient_id);
+
+    if (!recipientExists) {
+      return res.status(400).json({ error: 'Recipient does not exists.' });
+    }
+
+    const deliverymanExists = await Deliveryman.findByPk(
+      req.body.deliveryman_id
+    );
+
+    if (!deliverymanExists) {
+      return res.status(400).json({ error: 'Deliveryman does not exists.' });
+    }
+
+    const signatureExists = await Signature.findByPk(req.body.signature_id);
+
+    if (!signatureExists) {
+      return res.status(400).json({ error: 'Signature does not exists' });
+    }
+
+    const updtOrder = await OrderExists.update(req.body);
+
+    return res.json(updtOrder);
+  }
+
+  async delete(req, res) {
+    const orderExists = await Order.findByPk(req.params.id);
+
+    if (!orderExists) {
+      return res.status(400).json({ error: 'Order does not exists' });
+    }
+
+    orderExists.canceled_at = new Date();
+
+    await orderExists.save();
+
+    return res.json(orderExists);
+  }
 }
 
 export default new OrderController();
