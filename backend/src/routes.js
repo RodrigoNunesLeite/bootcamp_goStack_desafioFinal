@@ -9,6 +9,9 @@ import UsersController from './app/controllers/UsersController';
 import DeliverymenController from './app/controllers/DeliverymenController';
 import OrdersController from './app/controllers/OrdersController';
 import DeliveriesController from './app/controllers/DeliveriesController';
+import FileController from './app/controllers/FileController';
+import SignaturesController from './app/controllers/SignaturesController';
+
 import authMiddleware from './app/middlewares/auth';
 
 const routes = new Router();
@@ -57,5 +60,12 @@ routes.delete('/orders/:id', verifyAdm, OrdersController.delete);
 /* Funcionalidades dos entregadores */
 /* Visualizar encomendas */
 routes.get('/deliveries/:id/:status', DeliveriesController.index);
+/* Retirar encomendas */
+routes.put('/withdraw/:id/:deliverymanid', DeliveriesController.withdraw);
+/* Finalizar encomenda */
+routes.put('/finish/:id/:deliverymanid', DeliveriesController.finish);
+
+routes.post('/files', upload.single('file'), FileController.store);
+routes.post('/signatures', upload.single('file'), SignaturesController.store);
 
 export default routes;

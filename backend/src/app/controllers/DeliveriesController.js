@@ -1,4 +1,16 @@
 import * as Yup from 'yup';
+import {
+  setMilliseconds,
+  setMinutes,
+  setSeconds,
+  setHours,
+  parseISO,
+  addHours,
+  endOfDay,
+  startOfDay,
+  isBefore,
+  startOfHour,
+} from 'date-fns';
 
 import { Op } from 'sequelize';
 import Order from '../models/Orders';
@@ -22,6 +34,26 @@ class DeliveriesController {
             [Op.ne]: null,
           },
         },
+        include: [
+          {
+            model: Deliveryman,
+            as: 'deliveryman',
+            attributes: ['name', 'email'],
+          },
+          {
+            model: Recipient,
+            as: 'recipient',
+            attributes: [
+              'name',
+              'street',
+              'complement',
+              'neighborhood',
+              'state',
+              'city',
+              'zip_code',
+            ],
+          },
+        ],
       });
     } else {
       // busca as encomendas em aberto e canceladas
@@ -32,6 +64,26 @@ class DeliveriesController {
             [Op.is]: null,
           },
         },
+        include: [
+          {
+            model: Deliveryman,
+            as: 'deliveryman',
+            attributes: ['name', 'email'],
+          },
+          {
+            model: Recipient,
+            as: 'recipient',
+            attributes: [
+              'name',
+              'street',
+              'complement',
+              'neighborhood',
+              'state',
+              'city',
+              'zip_code',
+            ],
+          },
+        ],
       });
     }
 
@@ -165,6 +217,150 @@ class DeliveriesController {
     await orderExists.save();
 
     return res.json(orderExists);
+  }
+
+  async withdraw(req, res) {
+    /* Rota para retirada de encomendas */
+    const orderExist = await Order.findByPk(req.params.id);
+
+    // Verifica se a encomenda existe
+    if (!orderExist) {
+      return res.status(400).json({ error: 'Order does not exist' });
+    }
+
+    const date = parseISO(req.body.start_date);
+
+    const hourStart = startOfHour(date);
+
+    // Verifica se o horario está antes da data atual
+    if (isBefore(hourStart, new Date())) {
+      return res.status(400).json({ error: 'Past dates are not permitted' });
+    }
+
+    const checkAvailability = await Order.findOne({
+      where: {
+        deliveryman_id: req.params.deliverymanid,
+        canceled_at: null,
+        start_date: hourStart,
+        id: {
+          [Op.ne]: req.params.id,
+        },
+      },
+    });
+
+    if (checkAvailability) {
+      return res
+        .status(400)
+        .json({ error: 'Appointment date is not available' });
+    }
+
+    // converter a data para um objeto de data
+    /*
+    const startDate_ini = setHours(
+      setMinutes(
+        setSeconds(setMilliseconds(parseISO(req.body.start_date), 0), 0),
+        0
+      ),
+      0
+    );
+    const startDate_fim = addHours(startDate_ini, 24);
+*/
+    // console.log(startDate_ini, startDate_fim);
+    /* O entregador só pode fazer 5 retiradas por dia. */
+    const qtdOrders = await Order.findAndCountAll({
+      where: {
+        deliveryman_id: req.params.deliverymanid,
+        start_date: {
+          [Op.between]: [startOfDay(date), endOfDay(date)],
+        },
+      },
+    });
+
+    if (qtdOrders >= 5) {
+      return res
+        .status(400)
+        .json({ error: 'Five deliveries per day are allowed' });
+    }
+
+    const iniTime = setHours(
+      setMinutes(setSeconds(setMilliseconds(date, 0), 0), 0),
+      8
+    );
+    const endTime = setHours(
+      setMinutes(setSeconds(setMilliseconds(date, 0), 0), 0),
+      18
+    );
+
+    if (date < iniTime || date > endTime) {
+      return res.status(400).json({ error: 'Invalid schedule' });
+    }
+
+    /* Se passar pelas condições acima, atualiza a data de retirada */
+    await orderExist.update(req.body);
+
+    const orderUpdt = Order.findByPk(req.params.id, {
+      include: [
+        {
+          model: Deliveryman,
+          as: 'deliveryman',
+          attributes: ['name', 'email'],
+        },
+        {
+          model: Recipient,
+          as: 'recipient',
+          attributes: [
+            'name',
+            'street',
+            'complement',
+            'neighborhood',
+            'state',
+            'city',
+            'zip_code',
+          ],
+        },
+      ],
+    });
+
+    return res.json(orderUpdt);
+  }
+
+  async finish(req, res) {
+    const { id } = req.params;
+
+    const orderExist = await Order.findByPk(id);
+
+    if (!orderExist) {
+      return res.status(400).json({ error: 'Order does not exist.' });
+    }
+
+    await orderExist.update({
+      end_date: Date(),
+    });
+
+    const orderUpdt = Order.findByPk(id, {
+      include: [
+        {
+          model: Deliveryman,
+          as: 'deliveryman',
+          attributes: ['name', 'email'],
+        },
+        {
+          model: Recipient,
+          as: 'recipient',
+          attributes: [
+            'name',
+            'street',
+            'complement',
+            'neighborhood',
+            'state',
+            'city',
+            'zip_code',
+          ],
+        },
+      ],
+    });
+
+    return res.json(orderUpdt);
   }
 }
 
