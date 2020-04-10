@@ -1,10 +1,11 @@
 import Bee from 'bee-queue';
 
 import OrderMail from '../app/jobs/OrderMails';
+import CancellationMail from '../app/jobs/CancellationMails';
 import redisConfig from '../config/redis';
 
 // Sempre que surgir um novo job, acrescentamos no vetor
-const jobs = [OrderMail];
+const jobs = [OrderMail, CancellationMail];
 
 class Queue {
   // cada tipo de job vai ter sua propria fila

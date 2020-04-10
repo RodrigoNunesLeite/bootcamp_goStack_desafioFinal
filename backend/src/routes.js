@@ -1,7 +1,8 @@
 // importando apenas a parte de roteamento
 import { Router } from 'express';
 import multer from 'multer';
-import multerConfig from './config/multer';
+// import multerConfig from './config/multer';
+import { uplFile, uplSignature } from './config/multer';
 
 import SessionController from './app/controllers/SessionController';
 import RecipientsController from './app/controllers/RecipientsController';
@@ -11,11 +12,13 @@ import OrdersController from './app/controllers/OrdersController';
 import DeliveriesController from './app/controllers/DeliveriesController';
 import FileController from './app/controllers/FileController';
 import SignaturesController from './app/controllers/SignaturesController';
+import ProblemsController from './app/controllers/ProblemsController';
 
 import authMiddleware from './app/middlewares/auth';
 
 const routes = new Router();
-const upload = multer(multerConfig);
+const upload = multer(uplFile);
+const uploadSignature = multer(uplSignature);
 
 /* rota para cadastro da sessão */
 routes.post('/sessions', SessionController.store);
@@ -65,7 +68,21 @@ routes.put('/withdraw/:id/:deliverymanid', DeliveriesController.withdraw);
 /* Finalizar encomenda */
 routes.put('/finish/:id/:deliverymanid', DeliveriesController.finish);
 
+/* Rotas para cadastro de problemas */
+/* Listar todas as entregas com problemas */
+routes.get('/problems/:id', ProblemsController.index);
+
+/* Cadastrar problemas na entrega */
+routes.post('/problems/:idOrder/:idDelivery', ProblemsController.store);
+
+/* Cancelar uma entrega baseada no id do problema */
+routes.delete('/problems/:idProblem', ProblemsController.delete);
+
 routes.post('/files', upload.single('file'), FileController.store);
-routes.post('/signatures', upload.single('file'), SignaturesController.store);
+routes.post(
+  '/signatures',
+  uploadSignature.single('file'),
+  SignaturesController.store
+);
 
 export default routes;

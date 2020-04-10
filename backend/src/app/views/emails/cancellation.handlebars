@@ -1,0 +1,20 @@
+<strong>Olá, {{ deliveryman }}</strong>
+<p>Uma foi encomenda cancelada</p>
+<h3>Confira os dados abaixo:</h3>
+<p>
+  <strong>Destinatário:</strong> {{name}}<br/>
+  <strong>Produto:</strong> {{productName}}<br/>
+  <h3>Local de entrega:</h3>
+
+    <strong>Cep:</strong> {{zip_code}}<br/>
+    <strong>Logradouro:</strong> {{ street}}<br/>
+    <strong>Complemento:</strong> {{ complement}}<br/>
+    <strong>Bairro:</strong> {{ neighborhood}}<br/>
+    <strong>Cidade:</strong> {{ city}}<br/>
+    <strong>Estado:</strong> {{ state}}<br/>
+
+  <h3>Motivo do cancelamento:</h3>
+  <strong>Descrição:</strong>{{ description }}<br/>
+  <strong>Código do cancelamento:</strong>{{codCancel}} <br/>
+  <strong>Data/hr:</strong> {{dtcancel}}
+</p>

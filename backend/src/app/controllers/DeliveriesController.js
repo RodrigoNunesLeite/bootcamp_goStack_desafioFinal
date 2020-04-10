@@ -5,7 +5,6 @@ import {
   setSeconds,
   setHours,
   parseISO,
-  addHours,
   endOfDay,
   startOfDay,
   isBefore,
@@ -87,7 +86,7 @@ class DeliveriesController {
       });
     }
 
-    if (!orderExists) {
+    if (!orderExists || orderExists.length <= 0) {
       return res.status(400).json({ error: 'Orders does not exists.' });
     }
 
@@ -298,7 +297,7 @@ class DeliveriesController {
     /* Se passar pelas condições acima, atualiza a data de retirada */
     await orderExist.update(req.body);
 
-    const orderUpdt = Order.findByPk(req.params.id, {
+    const orderUpdt = await Order.findByPk(req.params.id, {
       include: [
         {
           model: Deliveryman,
@@ -337,7 +336,7 @@ class DeliveriesController {
       end_date: Date(),
     });
 
-    const orderUpdt = Order.findByPk(id, {
+    const orderUpdt = await Order.findByPk(id, {
       include: [
         {
           model: Deliveryman,
