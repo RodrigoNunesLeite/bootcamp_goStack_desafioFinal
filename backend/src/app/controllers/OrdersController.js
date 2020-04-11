@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { Op } from 'sequelize';
 
 import Order from '../models/Orders';
 import Recipient from '../models/Recipients';
@@ -10,8 +11,21 @@ import Queue from '../../lib/Queue';
 
 class OrderController {
   async index(req, res) {
-    const orderExists = await Order.findAll();
+    const { nomeProd } = req.params;
 
+    let orderExists;
+
+    if (nomeProd !== '') {
+      orderExists = await Order.findAll({
+        where: {
+          product: {
+            [Op.iLike]: `%${nomeProd}%`,
+          },
+        },
+      });
+    } else {
+      orderExists = await Order.findAll();
+    }
     if (!orderExists) {
       return res.status(400).json({ error: 'Orders does not exists.' });
     }

@@ -41,9 +41,11 @@ function verifyAdm(req, res, next) {
 routes.post('/recipients', RecipientsController.store);
 /* rota para atualizacao do destinatario */
 routes.put('/recipients', RecipientsController.update);
+/* rota para busca de destinatario */
+routes.get('/recipients/:nomeRec', RecipientsController.index);
 
 /* rota para listagem de entregadores */
-routes.get('/deliverymen', verifyAdm, DeliverymenController.index);
+routes.get('/deliverymen/:nome', verifyAdm, DeliverymenController.index);
 /* rota para cadastro de entregadores */
 routes.post('/deliverymen', verifyAdm, DeliverymenController.store);
 /* rota para atualização de entregadores */
@@ -52,7 +54,7 @@ routes.put('/deliverymen', verifyAdm, DeliverymenController.update);
 routes.delete('/deliverymen/:id', verifyAdm, DeliverymenController.delete);
 
 /* rota para listagem de encomendas */
-routes.get('/orders', verifyAdm, OrdersController.index);
+routes.get('/orders/:nomeProd', verifyAdm, OrdersController.index);
 /* rota para cadastro de encomendas */
 routes.post('/orders', verifyAdm, OrdersController.store);
 /* rota para atualização de encomendas */

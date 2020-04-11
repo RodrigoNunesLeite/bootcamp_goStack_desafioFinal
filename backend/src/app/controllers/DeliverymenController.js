@@ -1,11 +1,24 @@
 import * as Yup from 'yup';
 
+import { Op } from 'sequelize';
 import Deliverymen from '../models/Deliverymen';
 import File from '../models/Files';
 
 class DeliverymenController {
   async index(req, res) {
-    const deliverymenExists = await Deliverymen.findAll();
+    const { nome } = req.params;
+    let deliverymenExists;
+    if (nome !== '') {
+      deliverymenExists = await Deliverymen.findAll({
+        where: {
+          name: {
+            [Op.iLike]: `%${nome}%`,
+          },
+        },
+      });
+    } else {
+      deliverymenExists = await Deliverymen.findAll();
+    }
 
     if (!deliverymenExists) {
       return res.status(400).json({ error: 'Deliverymen dont exists.' });

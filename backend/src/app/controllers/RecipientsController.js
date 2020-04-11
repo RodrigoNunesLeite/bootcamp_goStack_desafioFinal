@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 
+import { Op } from 'sequelize';
 import Recipient from '../models/Recipients';
 
 class RecipientsController {
@@ -53,6 +54,30 @@ class RecipientsController {
     /* preciso passar o recipientExist para o update, porque é o registro que está locado */
     const recipient = await recipientExist.update(req.body);
     return res.json(recipient);
+  }
+
+  async index(req, res) {
+    const { nomeRec } = req.params;
+
+    let recipientExist;
+
+    if (nomeRec !== '0') {
+      recipientExist = await Recipient.findAll({
+        where: {
+          name: {
+            [Op.iLike]: `%${nomeRec}%`,
+          },
+        },
+      });
+    } else {
+      recipientExist = await Recipient.findAll();
+    }
+
+    if (recipientExist.length <= 0) {
+      return res.status(400).json({ error: 'Recipient does not exist' });
+    }
+
+    return res.json(recipientExist);
   }
 }
 
