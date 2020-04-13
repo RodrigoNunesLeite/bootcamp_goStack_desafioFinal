@@ -11,8 +11,8 @@ import { Route, Redirect } from 'react-router-dom';
  * caminhos das pastas, por ~(tio) e isso faz com que a busca
  * dos arquivos parta diretamente da pasta src
  */
-import AuthLayout from '~pages/_layout/auth';
-import DefaultLayou from '~/pages/_layouts/default';
+import AuthLayout from '~/pages/_layouts/auth';
+import DefaultLayout from '~/pages/_layouts/default';
 
 import { store } from '~/store';
 

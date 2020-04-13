@@ -9,22 +9,22 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 /**
-  * Usar o nome do componente de layout como
-  * wrapper é apenas para facilitar na hora da
-  * analise do inspecionar elemento
-  *
-  * Content = para centralizar o conteudo no centro
-  * da tela
-  */
+ * Usar o nome do componente de layout como
+ * wrapper é apenas para facilitar na hora da
+ * analise do inspecionar elemento
+ *
+ * Content = para centralizar o conteudo no centro
+ * da tela
+ */
 
 import { Wrapper, Content } from './styles';
 
 /**
-   * Como funciona o children = sempre que alguém
-   * quer usar o AuthLayout com algum conteudo dentro, o
-   * layout ja vai identificar esses dados
-   * <AuthLayout>div</AuthLayout>
-   */
+ * Como funciona o children = sempre que alguém
+ * quer usar o AuthLayout com algum conteudo dentro, o
+ * layout ja vai identificar esses dados
+ * <AuthLayout>div</AuthLayout>
+ */
 
 export default function AuthLayout({ children }) {
   return (

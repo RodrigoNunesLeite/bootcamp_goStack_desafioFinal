@@ -10,6 +10,7 @@ const routes = require('./routes');
 */
 // é possivel usar a sintaxe abaixo, por conta do sucrase
 import express from 'express';
+import cors from 'cors';
 import routes from './routes';
 
 /* vai executar automaticamente as instruções dentro do database */
@@ -25,6 +26,9 @@ class App {
 
   /* metodos */
   middlewares() {
+    // permite que o backend recebe requisições de fora
+    this.server.use(cors());
+
     // permite a aplicacao receber requisicoes como json
     this.server.use(express.json());
   }

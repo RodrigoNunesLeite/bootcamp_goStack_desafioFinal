@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useDispath, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Form, Input } from '@rocketseat/unform';
 
@@ -12,7 +12,7 @@ import * as Yup from 'yup';
 
 import { signInRequest } from '~/store/modules/auth/actions';
 
-import logo from '~/assets/fastfeet-logo.svg';
+import logo from '../../assets/fastfeet-logo.png';
 
 const schema = Yup.object().shape({
   email: Yup.string()
@@ -44,17 +44,24 @@ export default function SignIn() {
    */
   return (
     <>
-      <img src={logo} alt="FastFeet" />
       <Form schema={schema} onSubmit={handleSubmit}>
-        <Input name="email" type="email" placeholder="Seu e-mail" />
-        <Input
-          name="password"
-          type="password"
-          placeholder="Sua senha secreta"
-        />
+        <img src={logo} alt="FastFeet" />
+        <div>
+          <text>SEU E-MAIL</text>
 
-        <button type="submit">{loading ? 'Carregando...' : 'Acessar'}</button>
-        <Link to="/register">Criar conta gratuita</Link>
+          <Input name="email" type="email" placeholder="Seu e-mail" />
+          <text>SUA SENHA</text>
+          <Input
+            name="password"
+            type="password"
+            placeholder="Sua senha secreta"
+          />
+
+          <button type="submit">
+            {loading ? 'Carregando...' : 'Entrar no sistema'}
+          </button>
+          <Link to="/register">Criar conta gratuita</Link>
+        </div>
       </Form>
     </>
   );
