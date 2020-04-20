@@ -16,9 +16,10 @@ import ProblemsController from './app/controllers/ProblemsController';
 
 import authMiddleware from './app/middlewares/auth';
 
-const routes = new Router();
 const upload = multer(uplFile);
 const uploadSignature = multer(uplSignature);
+
+const routes = new Router();
 
 /* rota para cadastro da sessão */
 routes.post('/sessions', SessionController.store);

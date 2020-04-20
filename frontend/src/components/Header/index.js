@@ -19,7 +19,7 @@ export default function Header() {
               <Link to="/deliveries">ENCOMENDAS</Link>
             </li>
             <li>
-              <Link to="/">ENTREGADORES</Link>
+              <Link to="/deliverymen">ENTREGADORES</Link>
             </li>
             <li>
               <Link to="/">DESTINATÁRIOS</Link>

@@ -8,16 +8,31 @@ class DeliverymenController {
   async index(req, res) {
     const { nome } = req.params;
     let deliverymenExists;
-    if (nome !== '') {
+    if (nome.trim() !== '""') {
       deliverymenExists = await Deliverymen.findAll({
         where: {
           name: {
             [Op.iLike]: `%${nome}%`,
           },
         },
+        include: [
+          {
+            model: File,
+            as: 'avatar',
+            attributes: ['id', 'path', 'url'],
+          },
+        ],
       });
     } else {
-      deliverymenExists = await Deliverymen.findAll();
+      deliverymenExists = await Deliverymen.findAll({
+        include: [
+          {
+            model: File,
+            as: 'avatar',
+            attributes: ['id', 'path', 'url'],
+          },
+        ],
+      });
     }
 
     if (!deliverymenExists) {

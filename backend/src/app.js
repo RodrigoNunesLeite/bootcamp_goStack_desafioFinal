@@ -10,6 +10,7 @@ const routes = require('./routes');
 */
 // é possivel usar a sintaxe abaixo, por conta do sucrase
 import express from 'express';
+import path from 'path';
 import cors from 'cors';
 import routes from './routes';
 
@@ -31,6 +32,11 @@ class App {
 
     // permite a aplicacao receber requisicoes como json
     this.server.use(express.json());
+
+    this.server.use(
+      '/files',
+      express.static(path.resolve(__dirname, '..', 'tmp', 'uploads'))
+    );
   }
 
   routes() {

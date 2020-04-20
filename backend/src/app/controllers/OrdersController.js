@@ -15,16 +15,57 @@ class OrderController {
 
     let orderExists;
 
-    if (nomeProd !== '') {
+    if (!nomeProd) {
       orderExists = await Order.findAll({
         where: {
           product: {
             [Op.iLike]: `%${nomeProd}%`,
           },
         },
+        include: [
+          {
+            model: Deliveryman,
+            as: 'deliveryman',
+            attributes: ['name', 'email'],
+          },
+          {
+            model: Recipient,
+            as: 'recipient',
+            attributes: [
+              'name',
+              'street',
+              'complement',
+              'neighborhood',
+              'state',
+              'city',
+              'zip_code',
+            ],
+          },
+        ],
       });
     } else {
-      orderExists = await Order.findAll();
+      orderExists = await Order.findAll({
+        include: [
+          {
+            model: Deliveryman,
+            as: 'deliveryman',
+            attributes: ['name', 'email'],
+          },
+          {
+            model: Recipient,
+            as: 'recipient',
+            attributes: [
+              'name',
+              'street',
+              'complement',
+              'neighborhood',
+              'state',
+              'city',
+              'zip_code',
+            ],
+          },
+        ],
+      });
     }
     if (!orderExists) {
       return res.status(400).json({ error: 'Orders does not exists.' });
