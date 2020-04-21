@@ -61,7 +61,7 @@ class RecipientsController {
 
     let recipientExist;
 
-    if (nomeRec !== '0') {
+    if (nomeRec.trim() !== '""') {
       recipientExist = await Recipient.findAll({
         where: {
           name: {

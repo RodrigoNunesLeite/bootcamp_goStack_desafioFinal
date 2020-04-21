@@ -23,7 +23,6 @@ export default function Deliverymen() {
         color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
       }));
       setDeliverymen(data);
-      console.log(data);
     }
 
     loadDeliverymen();
