@@ -36,4 +36,27 @@ export const Content = styled.div`
 
 export const TitleList = styled.div`
   margin-bottom: 20px;
+  //background-color: blue;
+  width: 300px;
+`;
+
+export const InputContainer = styled.div`
+  position: relative;
+  padding-bottom: 40px;
+  // margin: 0 20px;
+  //background: #ddd;
+  width: 210px;
+  height: 20px;
+
+  input {
+    height: 20px;
+    width: 100%;
+    align:right;
+    padding-left:25px;
+  }
+
+  svg {
+    position: absolute;
+    top: 0;
+  }*
 `;

@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { MdAdd, MdSearch } from 'react-iconts/md';
+import { MdAdd, MdSearch } from 'react-icons/md';
 import api from '~/services/api';
 
 import { Container, Content, TitleList, Initials, MenuNav } from './styles';

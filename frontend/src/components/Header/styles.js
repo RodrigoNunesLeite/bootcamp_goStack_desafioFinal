@@ -36,7 +36,13 @@ export const Menu = styled.div`
     margin-left: 20px;
   }
 
-  li:hover {
-    font-weigth: bold;
+  a:hover {
+    color: #000;
+  }
+
+  a {
+    margin-top: 2px;
+    font-size: 12px;
+    color: #999;
   }
 `;
